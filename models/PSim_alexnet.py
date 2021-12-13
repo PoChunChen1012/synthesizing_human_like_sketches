@@ -71,3 +71,7 @@ class PSim_Alexnet(nn.Module):
         model_dict.update(state_dict)
         # 3. load the new state dict
         self.load_state_dict(state_dict)
+ 
+if __name__ == '__main__' :
+    print(list(torchvision.models.alexnet(pretrained=True).features))
+    print(list(torchvision.models.alexnet(pretrained=True).features.children()))
