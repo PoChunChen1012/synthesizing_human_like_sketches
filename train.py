@@ -105,10 +105,11 @@ def train(model, device, train_loader, optimizer, epoch, log_interval=(),
 
         optimizer.step()
         if batch_idx in log_interval:
-            log.info(f'Train Epoch: {epoch}/{args.epochs} '
-                     f'[{batch_idx * len(data)}/{len(train_loader.dataset)} '
-                     f'({100. * batch_idx / len(train_loader):.0f}%)]\t'
-                     f'Loss: {loss.item():.4f}')
+            print("None log")
+            # log.info(f'Train Epoch: {epoch}/{args.epochs} '
+            #          f'[{batch_idx * len(data)}/{len(train_loader.dataset)} '
+            #          f'({100. * batch_idx / len(train_loader):.0f}%)]\t'
+            #          f'Loss: {loss.item():.4f}')
         if batch_idx == 0:
             # extract imgs from first batch
             originals = [IMAGE_TRANSFORM_TB(data[j, ...].cpu().detach()) for j in range(args.tensorboard_gridsize)]
@@ -178,7 +179,7 @@ def run_experiment(outpath=None, resume_training=False, log=None):
         start_epoch = 1
 
     # Get number of trainable parameters
-    log.info(f'Number of trainable model parameters: {sum(p.numel() for p in model.parameters() if p.requires_grad):,}')
+    #log.info(f'Number of trainable model parameters: {sum(p.numel() for p in model.parameters() if p.requires_grad):,}')
 
     epoch_times = []
     train_losses = []
@@ -196,7 +197,7 @@ def run_experiment(outpath=None, resume_training=False, log=None):
 
         # save checkpoint every epoch
         fname = join(outpath, f'models/{args.run_name}_last_checkpoint.pt')
-        log.info(f'Saving model parameters to {fname}')
+        #log.info(f'Saving model parameters to {fname}')
         torch.save({'epoch': epoch + 1,
                     'state_dict': model.state_dict(),
                     'optimizer': optimizer.state_dict()},
@@ -216,12 +217,12 @@ def run_experiment(outpath=None, resume_training=False, log=None):
                 writer.add_scalar('losses/test_top5', test_accs_top5[-1], epoch)
         if epoch % args.save_interval == 0:
             checkpoint_name = join(outpath, f'models/model_epoch{epoch}.pt')
-            log.info(f'Saving model parameters to {checkpoint_name}')
+            #log.info(f'Saving model parameters to {checkpoint_name}')
             copyfile(fname, checkpoint_name)
         # timing
         epoch_times.append(time() - start_time)
         time_remaining = (args.epochs - (epoch + 1)) * np.mean(epoch_times)
-        log.info(f'Time/epoch: {epoch_times[-1]:.1f} s; approximately {time_remaining / 3600:.1f} h remaining')
+        #log.info(f'Time/epoch: {epoch_times[-1]:.1f} s; approximately {time_remaining / 3600:.1f} h remaining')
 
     # save loss/accuracy
     pickle.dump({'train': train_losses,
@@ -248,8 +249,8 @@ def main():
         print(f"Training finished")
     else:
         setup_output(outpath, overwrite_protection=True)
-        log = get_logger(outpath)
-        run_experiment(outpath=outpath, log=log)
+        #log = get_logger(outpath)
+        run_experiment(outpath=outpath)
 
 
 if __name__ == '__main__':
